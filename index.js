@@ -1,10 +1,12 @@
-require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+require("dotenv").config();
 require("./config/db.config")();
 
 const app = express();
+
 app.use(express.json());
+
 app.use(cors({ origin: process.env.REACT_APP_URL }));
 
 const uploadImgRouter = require("./routes/uploadimg.routes");

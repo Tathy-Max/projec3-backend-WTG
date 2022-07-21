@@ -9,7 +9,8 @@ const isAdmin = require("../middlewares/isAdmin");
 
 const saltRounds = 10;
 
-router.post("/signup", async (req, res) => {
+// SIGN UP
+router.post("/sign-up", async (req, res) => {
   try {
     // Primeira coisa: Criptografar a senha!
 
@@ -38,14 +39,17 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
+// LOG-IN
+router.post("/log-in", async (req, res) => {
   try {
     const { email, password } = req.body;
 
     const user = await UserModel.findOne({ email: email });
 
     if (!user) {
-      return res.status(400).json({ msg: "Wrong password or email." });
+      return res
+        .status(400)
+        .json({ msg: "Wrong password or email. Please, try again!" });
     }
 
     if (await bcrypt.compare(password, user.passwordHash)) {
@@ -57,7 +61,9 @@ router.post("/login", async (req, res) => {
         user: { ...user._doc },
       });
     } else {
-      return res.status(400).json({ msg: "Wrong password or email." });
+      return res
+        .status(400)
+        .json({ msg: "Wrong password or email. Please, try again!" });
     }
   } catch (error) {
     console.log(error);
@@ -65,11 +71,24 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// READ ALL USERS
+router.get("/all-users", async (req, res) => {
+  try {
+    const allUsers = await UserModel.find();
+    return res.status(200).json(allUsers);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json(error);
+  }
+});
+
+// READ ONE USER BY TOKEN
 router.get("/profile", isAuth, attachCurrentUser, (req, res) => {
   return res.status(200).json(req.currentUser);
 });
 
-router.patch("/update-profile", isAuth, attachCurrentUser, async (req, res) => {
+// UPDATE USER BY TOKEN
+router.patch("/update-user", isAuth, attachCurrentUser, async (req, res) => {
   try {
     const loggedInUser = req.currentUser;
 
@@ -88,28 +107,37 @@ router.patch("/update-profile", isAuth, attachCurrentUser, async (req, res) => {
   }
 });
 
-//SOFT DELETE
+//SOFT DELETE BY USER
+router.delete("/disable-user", isAuth, attachCurrentUser, async (req, res) => {
+  try {
+    const disabledUser = await UserModel.findOneAndUpdate(
+      { _id: req.currentUser._id },
+      { isActive: false, disabledOn: Date.now() },
+      { runValidators: true, new: true }
+    );
 
-router.delete(
-  "/disable-profile",
-  isAuth,
-  attachCurrentUser,
-  async (req, res) => {
-    try {
-      const disabledUser = await UserModel.findOneAndUpdate(
-        { _id: req.currentUser._id },
-        { isActive: false, disabledOn: Date.now() },
-        { runValidators: true, new: true }
-      );
+    delete disabledUser._doc.passwordHash;
 
-      delete disabledUser._doc.passwordHash;
-
-      return res.status(200).json(disabledUser);
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json(error);
-    }
+    return res.status(200).json(disabledUser);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
   }
-);
+});
+
+// DELETE BY ADMIN
+router.delete("/delete-user/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await UserModel.findOne({ role: "ADMIN" });
+    if (user === "ADMIN") {
+      const deleteUser = await UserModel.deleteOne({ _id: id });
+      return res.status(200).json(deleteUser);
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json(error);
+  }
+});
 
 module.exports = router;

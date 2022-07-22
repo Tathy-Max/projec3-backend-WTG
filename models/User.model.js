@@ -21,7 +21,7 @@ const userSchema = new Schema({
 	],
 	isActive: { type: Boolean, default: true },
 	disabledOn: { type: Date },
-	date_created: { type: Date, default: Date.now },
+	dateCreated: { type: Date, default: Date.now },
 });
 
 const UserModel = model('User', userSchema);

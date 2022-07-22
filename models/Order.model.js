@@ -1,7 +1,7 @@
 const { Schema, model, default: mongoose } = require('mongoose');
 
 const orderSchema = new Schema({
-	customer_id: {
+	customerId: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User',
 	},
@@ -11,8 +11,8 @@ const orderSchema = new Schema({
 			ref: 'Trip',
 		},
 	],
-	order_total: { type: Number, required: true, min: 0 },
-	date_created: { type: Date, default: Date.now },
+	orderTotal: { type: String, required: true },
+	dateCreated: { type: Date, default: Date.now },
 });
 
 const OrderModel = model('Order', orderSchema);

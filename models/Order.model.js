@@ -5,10 +5,10 @@ const orderSchema = new Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User',
 	},
-	juices: [
+	trips: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Juice',
+			ref: 'Trip',
 		},
 	],
 	order_total: { type: Number, required: true, min: 0 },

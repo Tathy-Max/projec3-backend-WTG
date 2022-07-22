@@ -9,7 +9,7 @@ const attachCurrentUser = require('../middlewares/attachCurrentUser');
 const isAdmin = require('../middlewares/isAdmin');
 
 // CREATE ORDER
-router.post('/new-order/:idUser', async (req, res) => {
+router.post('/new-order', isAuth, attachCurrentUser, async (req, res) => {
 	try {
 		const { idUser } = req.params;
 		const newOrder = await OrderModel.create({

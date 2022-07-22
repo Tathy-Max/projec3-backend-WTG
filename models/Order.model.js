@@ -7,7 +7,7 @@ const orderSchema = new Schema({
 	},
 	trips: [
 		{
-			type: mongoose.Schema.Types.ObjectId,
+			type: mongoose.Schema.Types.ObjectId, //FAZER O POPULATE AQUI!
 			ref: 'Trip',
 		},
 	],

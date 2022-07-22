@@ -15,7 +15,7 @@ router.post('/sign-up', async (req, res) => {
 		// Primeira coisa: Criptografar a senha!
 
 		const { password } = req.body;
-
+//checar REQUIREMENTS DO password aqui! angel!
 		if (!password) {
 			return res.status(400).json({
 				msg: 'Password is required and must have at least 8 characters, uppercase and lowercase letters, numbers and special characters.',
@@ -117,7 +117,6 @@ router.delete('/disable-user', isAuth, attachCurrentUser, async (req, res) => {
 		);
 
 		delete disabledUser._doc.passwordHash;
-
 		return res.status(200).json(disabledUser);
 	} catch (error) {
 		console.log(error);
@@ -126,14 +125,11 @@ router.delete('/disable-user', isAuth, attachCurrentUser, async (req, res) => {
 });
 
 // DELETE BY ADMIN (RESOLVER)
-router.delete('/delete-user/:id', async (req, res) => {
+router.delete('/delete-user/:id', isAuth, attachCurrentUser, isAdmin, async (req, res) => {
 	try {
 		const { id } = req.params;
-		const user = await UserModel.findOne({ role: 'ADMIN' });
-		if (user === 'ADMIN') {
 			const deleteUser = await UserModel.deleteOne({ _id: id });
 			return res.status(200).json(deleteUser);
-		}
 	} catch (error) {
 		console.error(error);
 		return res.status(500).json(error);

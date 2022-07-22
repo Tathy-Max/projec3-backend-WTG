@@ -62,7 +62,7 @@ router.patch('/edit-order/:id', async (req, res) => {
 			{ ...req.body },
 			{ new: true }
 		);
-		return res.status(200).json(editTrip);
+		return res.status(200).json(editOrder);
 	} catch (error) {
 		console.error(error);
 		return res.status(500).json(error);
@@ -74,7 +74,7 @@ router.delete('/delete-order/:id', async (req, res) => {
 	try {
 		const { id } = req.params;
 		const deleteOrder = await OrderModel.deleteOne({ _id: id });
-		return res.status(200).json(deleteTrip);
+		return res.status(200).json(deleteOrder);
 	} catch (error) {
 		console.error(error);
 		return res.status(500).json(error);

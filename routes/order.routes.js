@@ -2,6 +2,7 @@ const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const TripModel = require("../models/Trip.model");
 const OrderModel = require("../models/Order.model");
+const UserModel = require("../models/User.model");
 
 const generateToken = require("../config/jwt.config");
 const isAuth = require("../middlewares/isAuth");
@@ -11,18 +12,13 @@ const isAdmin = require("../middlewares/isAdmin");
 // CREATE ORDER
 router.post("/new-order", isAuth, attachCurrentUser, async (req, res) => {
   try {
-    const { loggedInUser } = req.currentUser;
-    const { idUser } = req.params;
+    const loggedInUser = req.currentUser;
 
-    UserModel.findById(idUser);
-    let total = 0;
-    for (let i = 0; i < req.body.trips; i++) {
-      total = total + req.body.trips[i].price * req.body.trips[i].quantity;
-    }
-    const newOrder = await OrdersModel.create({
+    const newOrder = await OrderModel.create({
       ...req.body,
-      orderTotal: total,
-    }).populate("trips");
+      //    orderTotal: total,
+      customerId: loggedInUser._id,
+    });
     await UserModel.findByIdAndUpdate(loggedInUser._id, {
       $push: {
         orders: newOrder._id,
@@ -36,10 +32,28 @@ router.post("/new-order", isAuth, attachCurrentUser, async (req, res) => {
   }
 });
 
-// READ ALL ORDERS
-router.get("/all-orders", async (req, res) => {
+// READ ALL ORDERS (Admin)
+router.get(
+  "/all-orders",
+  isAuth,
+  attachCurrentUser,
+  isAdmin,
+  async (req, res) => {
+    try {
+      const allOrders = await OrderModel.find();
+      return res.status(200).json(allOrders);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json(error);
+    }
+  }
+);
+
+//Read orders by User
+router.get("/all-orders-user", isAuth, attachCurrentUser, async (req, res) => {
   try {
-    const allOrders = await OrderModel.find();
+    const loggedInUser = req.currentUser;
+    const allOrders = await OrderModel.find({ customerId: loggedInUser._id });
     return res.status(200).json(allOrders);
   } catch (error) {
     console.error(error);

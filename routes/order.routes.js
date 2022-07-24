@@ -40,7 +40,10 @@ router.get(
   isAdmin,
   async (req, res) => {
     try {
-      const allOrders = await OrderModel.find();
+      const allOrders = await OrderModel.find()
+        .populate("customerId")
+        .populate("trips");
+      console.log(allOrders);
       return res.status(200).json(allOrders);
     } catch (error) {
       console.error(error);

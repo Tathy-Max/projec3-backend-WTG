@@ -138,7 +138,7 @@ router.delete("/disable-user", isAuth, attachCurrentUser, async (req, res) => {
   }
 });
 
-// DELETE BY ADMIN 
+// DELETE BY ADMIN
 router.delete(
   "/delete-user/:id",
   isAuth,

@@ -9,7 +9,7 @@ const userSchema = new Schema({
     trim: true,
     match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
   },
-  birthday: { type: String, required: true },
+  birthday: { type: String },
   // password nao esta sendo checado.
   passwordHash: { type: String, required: true },
   role: { type: String, enum: ["ADMIN", "USER"], default: "USER" },

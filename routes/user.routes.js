@@ -109,7 +109,7 @@ router.patch("/update-user", isAuth, attachCurrentUser, async (req, res) => {
     const updatedUser = await UserModel.findOneAndUpdate(
       { _id: loggedInUser._id },
       { ...req.body },
-      { runValidators: true, new: true }
+      { new: true }
     );
 
     delete updatedUser._doc.passwordHash;
@@ -138,7 +138,7 @@ router.delete("/disable-user", isAuth, attachCurrentUser, async (req, res) => {
   }
 });
 
-// DELETE BY ADMIN 
+// DELETE BY ADMIN
 router.delete(
   "/delete-user/:id",
   isAuth,

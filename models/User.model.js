@@ -22,6 +22,7 @@ const userSchema = new Schema({
   isActive: { type: Boolean, default: true },
   disabledOn: { type: Date },
   dateCreated: { type: Date, default: Date.now },
+  proImg: { type: String },
 });
 
 const UserModel = model("User", userSchema);

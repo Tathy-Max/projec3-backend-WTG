@@ -5,7 +5,7 @@ const tripSchema = new Schema({
 	category: {
 		type: String,
 		required: true,
-		enum: ['Adventure', 'Relax', 'Nightlife', 'Culture', 'Beach'],
+		enum: ['Adventure', 'Relax', 'Nightlife', 'Culture', 'Romance'],
 	},
 	inStock: { type: String },
 	description: { type: String, required: true, trim: true, maxlength: 300 },

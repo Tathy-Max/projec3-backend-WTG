@@ -1,6 +1,7 @@
-const { Schema, model, default: mongoose } = require("mongoose");
+const { Schema, model, default: mongoose } = require('mongoose');
 
 const userSchema = new Schema({
+
   name: { type: String, required: true, trim: true },
   email: {
     type: String,
@@ -25,6 +26,6 @@ const userSchema = new Schema({
   proImg: { type: String },
 });
 
-const UserModel = model("User", userSchema);
+const UserModel = model('User', userSchema);
 
 module.exports = UserModel;

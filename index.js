@@ -7,20 +7,20 @@ const app = express();
 
 app.use(express.json());
 
-app.use(function (req, res, next) {
-	req.header(
-		'Access-Control-Allow-Origin',
-		'https://project-three-ironhack.netlify.app'
-	);
-	req.header(
-		'Access-Control-Allow-Headers',
-		'Origin, X-Requested-With, Content-Type, Accept'
-	);
-	req.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
-	next();
-});
+// app.use(function (req, res, next) {
+// 	req.header(
+// 		'Access-Control-Allow-Origin',
+// 		'https://project-three-ironhack.netlify.app'
+// 	);
+// 	req.header(
+// 		'Access-Control-Allow-Headers',
+// 		'Origin, X-Requested-With, Content-Type, Accept'
+// 	);
+// 	req.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+// 	next();
+// });
 
-// app.use(cors({ origin: process.env.REACT_APP_URL }));
+app.use(cors({ origin: process.env.REACT_APP_URL }));
 
 const uploadImgRouter = require('./routes/uploadimg.routes');
 app.use('/', uploadImgRouter);
